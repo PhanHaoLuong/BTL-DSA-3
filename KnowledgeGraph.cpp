@@ -78,6 +78,16 @@ void VertexNode<T>::removeTo(VertexNode<T>* to) {
     }
 }
 
+template <class T>
+int VertexNode<T>::inDegree() {
+    return this->inDegree_;
+}
+
+template <class T>
+int VertexNode<T>::outDegree() {
+    return this->outDegree_;
+}
+
 // =============================================================================
 // Class DGraphModel Implementation
 // =============================================================================
