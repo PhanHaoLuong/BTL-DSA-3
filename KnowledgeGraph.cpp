@@ -56,6 +56,16 @@ void VertexNode<T>::connect(VertexNode<T>* to, float weight) {
     to->adList.push_back(newEdge);
 }
 
+template <class T>
+Edge<T>* VertexNode<T>::getEdge(VertexNode<T>* to) {
+    Edge<T>* res = nullptr;
+    for (Edge<T>* e : this->adList) {
+        if (e->getDest() == to) res = e;
+    }
+
+    return res;
+}
+
 // =============================================================================
 // Class DGraphModel Implementation
 // =============================================================================

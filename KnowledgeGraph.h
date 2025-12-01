@@ -27,6 +27,10 @@ public:
     static bool edgeEQ(Edge<T>*& edge1, Edge<T>*& edge2);
     string toString();
 
+    VertexNode<T>* getDest() {
+        return this->to;
+    }
+
     friend class VertexNode<T>;
     friend class DGraphModel<T>;
 };
