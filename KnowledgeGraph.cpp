@@ -45,8 +45,15 @@ VertexNode<T>::VertexNode(T vertex, bool (*vertexEQ)(T&, T&), string (*vertex2st
 }
 
 template <class T>
+T& VertexNode<T>::getVertex() {
+    return this->vertex;
+}
+
+template <class T>
 void VertexNode<T>::connect(VertexNode<T>* to, float weight) {
-    // TODO: Connect this vertex to the 'to' vertex
+    Edge<T>* newEdge = new Edge<T>(this, to, weight);
+    this->adList.push_back(newEdge);
+    to->adList.push_back(newEdge);
 }
 
 // =============================================================================
