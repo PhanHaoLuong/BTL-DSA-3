@@ -1,4 +1,5 @@
 #include "KnowledgeGraph.h"
+#include <cstddef>
 
 // =============================================================================
 // Class Edge Implementation
@@ -18,7 +19,17 @@ string Edge<T>::toString() {
 }
 
 // TODO: Implement other methods of Edge:
+template <class T>
+bool Edge<T>::equals(Edge<T>* edge) {
+    if (edge == nullptr) return false;
+    return (this->from == edge->from && this->to == edge->to && this->weight == edge->weight);
+}
 
+template <class T>
+bool Edge<T>::edgeEQ(Edge<T> *&edge1, Edge<T> *&edge2) {
+    if (edge1 == nullptr || edge2 == nullptr) return false;
+    return edge1->equals(edge2);
+}
 
 // =============================================================================
 // Class VertexNode Implementation
