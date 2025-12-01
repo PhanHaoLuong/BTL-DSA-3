@@ -66,6 +66,18 @@ Edge<T>* VertexNode<T>::getEdge(VertexNode<T>* to) {
     return res;
 }
 
+template <class T>
+bool VertexNode<T>::equals(VertexNode<T>* node) {
+    return this->vertexEQ(this->vertex, node->getVertex());
+}
+
+template <class T>
+void VertexNode<T>::removeTo(VertexNode<T>* to) {
+    for (int i = 0; i < this->adList.size(); ++i) {
+        if (this->adList.at(i)->getDest() == to) this->adList.erase(this->adList.begin() + i);
+    }
+}
+
 // =============================================================================
 // Class DGraphModel Implementation
 // =============================================================================
