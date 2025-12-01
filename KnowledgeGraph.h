@@ -21,8 +21,7 @@ private:
     float weight;
 
 public:
-    Edge(VertexNode<T>* from = nullptr, VertexNode<T>* to = nullptr, float weight = 0)
-    : from(from), to(to), weight(weight) {};
+    Edge(VertexNode<T>* from = nullptr, VertexNode<T>* to = nullptr, float weight = 0);
     
     bool equals(Edge<T>* edge);
     static bool edgeEQ(Edge<T>*& edge1, Edge<T>*& edge2);
