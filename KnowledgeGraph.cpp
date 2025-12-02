@@ -100,21 +100,70 @@ DGraphModel<T>::DGraphModel(bool (*vertexEQ)(T&, T&), string (*vertex2str)(T&)) 
 
 template <class T>
 DGraphModel<T>::~DGraphModel() {
-    // TODO: Clear all vertices and edges to avoid memory leaks
+	for (VertexNode<T>* node : this->nodeList) delete node;
+}
+
+template <class T>
+VertexNode<T>* DGraphModel<T>::getVertexNode(T& vertex) {
+	for (VertexNode<T>* node : this->nodeList) {
+		if (node->getVertex() == vertex) return node;
+	}
+
+	return nullptr;
 }
 
 template <class T>
 void DGraphModel<T>::add(T vertex) {
-    // TODO: Add a new vertex to the graph
+	VertexNode<T>* newVertex = new VertexNode<T>(vertex);
+	this->nodeList.push_back(newVertex);
+}
+
+template <class T>
+bool DGraphModel<T>::contains(T vertex) {
+	for (VertexNode<T>* node : this->nodeList) {
+		if (node->getVertex() == vertex) return true;
+	}
+	
+	return false;
+}
+
+//TODO Change implementation
+template <class T>
+float DGraphModel<T>::weight(T from, T to) {
+
+}
+
+template <class T>
+vector<T> DGraphModel<T>::getOutwardEdges(T from) {
+	vector<T> res;
+	VertexNode<T>* vFrom = this->getVertexNode(from);
+	if (!vFrom) throw VertexNotFoundException();
+	else {
+		for (Edge<T>* edge : vFrom->adList) {
+			res.push_back(edge->getDest()->getVertex());
+		}
+
+		return res;
+	}
 }
 
 template <class T>
 void DGraphModel<T>::connect(T from, T to, float weight) {
-    // TODO: Connect two vertices 'from' and 'to'
+	VertexNode<T>* vFrom = this->getVertexNode(from);
+	VertexNode<T>* vTo = this->getVertexNode(to);
+	if (!vFrom || !vTo) throw VertexNotFoundException();
 
+	vFrom->connect(vTo, weight);
 }
 
-// TODO: Implement other methods of DGraphModel:
+template <class T>
+void DGraphModel<T>::disconnect(T from, T to) {
+	VertexNode<T>* vFrom = this->getVertexNode(from);
+	VertexNode<T>* vTo = this->getVertexNode(to);
+	if (!vFrom || !vTo) throw VertexNotFoundException();
+
+	vFrom->removeTo(vTo);
+}
 
 // =============================================================================
 // Class KnowledgeGraph Implementation

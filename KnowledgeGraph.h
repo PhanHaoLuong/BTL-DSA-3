@@ -30,6 +30,13 @@ public:
     static bool edgeEQ(Edge<T>*& edge1, Edge<T>*& edge2);
     string toString();
 
+	float getWeight() {
+		return this->weight;
+	}
+
+	VertexNode<T>* getStart() {
+		return this->from;
+	}
     VertexNode<T>* getDest() {
         return this->to;
     }
