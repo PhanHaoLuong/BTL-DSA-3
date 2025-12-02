@@ -100,7 +100,7 @@ DGraphModel<T>::DGraphModel(bool (*vertexEQ)(T&, T&), string (*vertex2str)(T&)) 
 
 template <class T>
 DGraphModel<T>::~DGraphModel() {
-	for (VertexNode<T>* node : this->nodeList) delete node;
+	this->clear();
 }
 
 template <class T>
@@ -163,6 +163,46 @@ void DGraphModel<T>::disconnect(T from, T to) {
 	if (!vFrom || !vTo) throw VertexNotFoundException();
 
 	vFrom->removeTo(vTo);
+}
+
+template <class T>
+bool DGraphModel<T>::connected(T from, T to) {
+	VertexNode<T>* vFrom = this->getVertexNode(from);
+	VertexNode<T>* vTo = this->getVertexNode(to);
+	if (!vFrom || !vTo) throw VertexNotFoundException();
+
+	Edge<T>* connectingEdge =  vFrom->getEdge(vTo);
+	if (!connectingEdge) return false;
+	return true;
+}
+
+template <class T>
+int DGraphModel<T>::size() {
+	return this->nodeList.size();
+}
+
+template <class T>
+bool DGraphModel<T>::empty() {
+	return this->nodeList.empty();
+}
+
+template <class T>
+void DGraphModel<T>::clear() {
+	for (VertexNode<T>* node : this->nodeList) delete node;
+}
+
+template <class T>
+int DGraphModel<T>::inDegree(T vertex) {
+	VertexNode<T>* v = getVertexNode(vertex);
+	if (!v) throw VertexNotFoundException();
+	return v->inDegree();
+}
+
+template <class T>
+int DGraphModel<T>::outDegree(T vertex) {
+	VertexNode<T>* v = getVertexNode(vertex);
+	if (!v) throw VertexNotFoundException();
+	return v->outDegree();
 }
 
 // =============================================================================
