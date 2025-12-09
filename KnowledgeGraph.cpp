@@ -130,7 +130,14 @@ bool DGraphModel<T>::contains(T vertex) {
 //TODO Change implementation
 template <class T>
 float DGraphModel<T>::weight(T from, T to) {
+	VertexNode<T>* fromNode = this->getVertexNode(from);
+	VertexNode<T>* toNode = this->getVertexNode(to);
+	if (!fromNode || !toNode) throw VertexNotFoundException();
 
+	Edge<T>* edge = fromNode->getEdge(toNode);
+	if (!edge) throw EdgeNotFoundException();
+
+	return edge->getWeight();
 }
 
 template <class T>
