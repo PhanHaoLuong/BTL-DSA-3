@@ -122,6 +122,12 @@ public:
     vector<T> vertices();
     
     string toString();
+	bool isVisited(VertexNode<T>* node, vector<VertexNode<T>*>& visited) {
+		for (VertexNode<T>* v : visited) {
+			if (v == node) return true;
+		}
+		return false;
+	}
     string BFS(T start);
     string DFS(T start);
 };

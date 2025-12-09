@@ -205,6 +205,57 @@ int DGraphModel<T>::outDegree(T vertex) {
 	return v->outDegree();
 }
 
+template <class T>
+string DGraphModel<T>::BFS(T start) {
+	VertexNode<T>* startNode = this->getVertexNode(start);
+	if (!startNode) throw VertexNotFoundException();
+
+	vector<VertexNode<T>*> q;
+	vector<VertexNode<T>*> visited;
+	stringstream s;
+	q.push_back(startNode);
+
+	while (!q.empty()) {
+		VertexNode<T>* node = q.front(); q.erase(q.begin());
+		if (this->isVisited(node, visited)) continue;
+
+		visited.push_back(node);
+		s << node->toString() << " ";
+		
+		for (int i = 0; i < node->adList.size(); ++i) {
+			VertexNode<T>* toNode = node->adList[i]->getDest();
+			if (!this->isVisited(toNode, visited)) q.push_back(toNode);
+		}
+	}
+
+	return s.str();
+}
+
+template <class T>
+string DGraphModel<T>::DFS(T start) {
+	VertexNode<T>* startNode = this->getVertexNode(start);
+	if (!startNode) throw VertexNotFoundException();
+
+	vector<VertexNode<T>*> st;
+	vector<VertexNode<T>*> visited;
+	stringstream s;
+	st.push_back(startNode);
+
+	while (!st.empty()) {
+		VertexNode<T>* node = st.back(); st.pop_back();
+		if (this->isVisited(node, visited)) continue;
+
+		visited.push_back(node);
+		s << node->toString() << " ";
+		
+		for (int i = node->adList.size() - 1; i >= 0; --i) {
+			VertexNode<T>* toNode = node->adList[i]->getDest();
+			if (!this->isVisited(toNode, visited)) st.push_back(toNode);
+		}
+	}
+
+	return s.str();
+}
 // =============================================================================
 // Class KnowledgeGraph Implementation
 // =============================================================================
