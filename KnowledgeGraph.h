@@ -145,7 +145,13 @@ private:
 
 public:
     KnowledgeGraph();
-    
+
+	bool hasEntity(string entity) {
+		for (string e : this->entities) {
+			if (e == entity) return true;
+		}
+		return false;
+	}
     void addEntity(string entity);
     void addRelation(string from, string to, float weight = 1.0f);
     

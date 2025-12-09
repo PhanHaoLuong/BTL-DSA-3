@@ -1,4 +1,5 @@
 #include "KnowledgeGraph.h"
+#include "main.h"
 #include <cstddef>
 
 // =============================================================================
@@ -127,7 +128,6 @@ bool DGraphModel<T>::contains(T vertex) {
 	return false;
 }
 
-//TODO Change implementation
 template <class T>
 float DGraphModel<T>::weight(T from, T to) {
 	VertexNode<T>* fromNode = this->getVertexNode(from);
@@ -268,20 +268,30 @@ string DGraphModel<T>::DFS(T start) {
 // =============================================================================
 
 KnowledgeGraph::KnowledgeGraph() {
-    // TODO: Initialize the KnowledgeGraph
 }
 
 void KnowledgeGraph::addEntity(string entity) {
-    // TODO: Add a new entity to the Knowledge Graph
+	if (this->hasEntity(entity)) throw EntityExistsException();
+
+	this->graph.add(entity);
+	this->entities.push_back(entity);
 }
 
 void KnowledgeGraph::addRelation(string from, string to, float weight) {
-    // TODO: Add a directed relation
+	if (!this->graph.contains(from) || !this->graph.contains(to)) throw EntityNotFoundException();
+
+	this->graph.connect(from, to, weight);
 }
 
 // TODO: Implement other methods of KnowledgeGraph:
+vector<string> KnowledgeGraph::getAllEntities() {
+	return this->entities;
+}
 
-
+vector<string> KnowledgeGraph::getNeighbors(string entity) {
+	if (!this->hasEntity(entity)) throw EntityNotFoundException();
+	return this->graph.getOutwardEdges(entity);
+}
 
 // =============================================================================
 // Explicit Template Instantiation
