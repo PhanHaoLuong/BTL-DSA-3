@@ -225,7 +225,15 @@ int DGraphModel<T>::outDegree(T vertex) {
 }
 
 template <class T>
-vector<T> DGraphModel<T>::vertices() {}
+vector<T> DGraphModel<T>::vertices() {
+    vector<T> res;
+
+    for (VertexNode<T>* vertex : nodeList) {
+        res.push_back(vertex->getVertex());
+    }
+
+    return res;
+}
 
 template <class T>
 string DGraphModel<T>::toString(){
