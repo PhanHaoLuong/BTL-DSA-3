@@ -22,7 +22,7 @@ string Edge<T>::toString() {
 template <class T>
 bool Edge<T>::equals(Edge<T>* edge) {
     if (edge == nullptr) return false;
-    return (this->from == edge->from && this->to == edge->to && this->weight == edge->weight);
+    return (this->from == edge->from && this->to == edge->to);
 }
 
 template <class T>
@@ -53,7 +53,8 @@ template <class T>
 void VertexNode<T>::connect(VertexNode<T>* to, float weight) {
     Edge<T>* newEdge = new Edge<T>(this, to, weight);
     this->adList.push_back(newEdge);
-    to->adList.push_back(newEdge);
+    this->outDegree_++;
+    to->inDegree_++;
 }
 
 template <class T>
@@ -73,8 +74,15 @@ bool VertexNode<T>::equals(VertexNode<T>* node) {
 
 template <class T>
 void VertexNode<T>::removeTo(VertexNode<T>* to) {
-    for (int i = 0; i < this->adList.size(); ++i) {
-        if (this->adList.at(i)->getDest() == to) this->adList.erase(this->adList.begin() + i);
+    for (int i = 0; i < adList.size(); ++i) {
+        Edge<T>* e = adList[i];
+        if (e->getDest() == to) {
+            adList.erase(adList.begin() + i);
+            this->outDegree_--;
+            to->inDegree_--;
+            delete e;
+            return;
+        }
     }
 }
 
@@ -91,7 +99,7 @@ int VertexNode<T>::outDegree() {
 template <class T>
 string VertexNode<T>::toString() {
     stringstream s;
-    s << "(" << this->vertex << ", " << this->inDegree_ << ", " << this->outDegree_ << ", " << "[";
+    s << "(" << this->vertex << ", " << this->inDegree_ << ", " << this->outDegree_ << ", [";
 
     for (Edge<T>* edge : adList) {
         s << edge->toString() << ", ";
@@ -127,7 +135,7 @@ VertexNode<T>* DGraphModel<T>::getVertexNode(T& vertex) {
 
 template <class T>
 void DGraphModel<T>::add(T vertex) {
-	VertexNode<T>* newVertex = new VertexNode<T>(vertex);
+    VertexNode<T>* newVertex = new VertexNode<T>(vertex, vertexEQ, vertex2str);
 	this->nodeList.push_back(newVertex);
 }
 
@@ -207,8 +215,20 @@ bool DGraphModel<T>::empty() {
 
 template <class T>
 void DGraphModel<T>::clear() {
-	for (VertexNode<T>* node : this->nodeList) delete node;
+    for (VertexNode<T>* node : nodeList) {
+        for (Edge<T>* e : node->adList) {
+            delete e;
+        }
+        node->adList.clear();
+    }
+
+    for (VertexNode<T>* node : nodeList) {
+        delete node;
+    }
+
+    nodeList.clear();
 }
+
 
 template <class T>
 int DGraphModel<T>::inDegree(T vertex) {

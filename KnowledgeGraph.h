@@ -66,11 +66,23 @@ private:
 public:
     VertexNode(T vertex, bool (*vertexEQ)(T&, T&) = nullptr, string (*vertex2str)(T&) = nullptr);
 	~VertexNode() {
-		for (Edge<T> e : adList) delete e;
+		for (Edge<T>* e : adList) delete e;
+        adList.clear();
 	}
     T& getVertex();
     void connect(VertexNode<T>* to, float weight = 0);
     Edge<T>* getEdge(VertexNode<T>* to);
+    vector<T> getOutVertices() {
+        vector<T> outV;
+
+        for (Edge<T>* edge : adList) {
+            if (edge->from == this) {
+                outV.push_back(edge->to->vertex);
+            }
+        }
+        
+        return outV;
+    }
     bool equals(VertexNode<T>* node);
     void removeTo(VertexNode<T>* to);
     int inDegree();
