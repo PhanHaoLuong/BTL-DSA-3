@@ -323,15 +323,37 @@ void KnowledgeGraph::addRelation(string from, string to, float weight) {
 	this->graph.connect(from, to, weight);
 }
 
-// TODO: Implement other methods of KnowledgeGraph:
 vector<string> KnowledgeGraph::getAllEntities() {
 	return this->entities;
 }
 
 vector<string> KnowledgeGraph::getNeighbors(string entity) {
 	if (!this->hasEntity(entity)) throw EntityNotFoundException();
-	return this->graph.getOutwardEdges(entity);
+    VertexNode<string>* node = this->graph.getVertexNode(entity);
+    return node->getOutVertices();
 }
+
+string KnowledgeGraph::bfs(string start) {
+    if (!this->hasEntity(start)) throw EntityNotFoundException();
+
+    return this->graph.BFS(start);
+}
+
+string KnowledgeGraph::dfs(string start) {
+    if (!this->hasEntity(start)) throw EntityNotFoundException();
+
+    return this->graph.DFS(start);
+}
+
+bool KnowledgeGraph::isReachable(string from, string to) {
+
+}
+
+string KnowledgeGraph::toString() {}
+
+vector<string> getRelatedEntities(string entity, int depth = 2) {}
+
+string findCommonAncestors(string entity1, string entity2) {}
 
 // =============================================================================
 // Explicit Template Instantiation
