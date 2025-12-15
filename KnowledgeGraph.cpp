@@ -1,8 +1,4 @@
 #include "KnowledgeGraph.h"
-<<<<<<< HEAD
-=======
-
->>>>>>> e69734c76c427a7e537abeef7b6bc9d3aecbd189
 
 // =============================================================================
 // Class Edge Implementation
@@ -158,12 +154,12 @@ float DGraphModel<T>::weight(T from, T to) {
 
 template <class T>
 vector<Edge<T>*> DGraphModel<T>::getOutwardEdges(T from) {
-	vector<T> res;
+	vector<Edge<T>*> res;
 	VertexNode<T>* vFrom = this->getVertexNode(from);
 	if (!vFrom) throw VertexNotFoundException();
 	else {
 		for (Edge<T>* edge : vFrom->adList) {
-			res.push_back(edge->getDest()->getVertex());
+			res.push_back(edge);
 		}
 
 		return res;
@@ -229,6 +225,22 @@ int DGraphModel<T>::outDegree(T vertex) {
 }
 
 template <class T>
+vector<T> DGraphModel<T>::vertices() {}
+
+template <class T>
+string DGraphModel<T>::toString(){
+    stringstream s;
+    s << "[";
+
+    for (VertexNode<T>* node : this->nodeList) {
+        s << node->toString() << ", ";
+    }
+
+    s << "]";
+    return s.str();
+}
+
+template <class T>
 string DGraphModel<T>::BFS(T start) {
 	VertexNode<T>* startNode = this->getVertexNode(start);
 	if (!startNode) throw VertexNotFoundException();
@@ -236,6 +248,7 @@ string DGraphModel<T>::BFS(T start) {
 	vector<VertexNode<T>*> q;
 	vector<VertexNode<T>*> visited;
 	stringstream s;
+    s << "[ ";
 	q.push_back(startNode);
 
 	while (!q.empty()) {
@@ -243,13 +256,14 @@ string DGraphModel<T>::BFS(T start) {
 		if (this->isVisited(node, visited)) continue;
 
 		visited.push_back(node);
-		s << node->toString() << " ";
+		s << node->toString() << ", ";
 		
 		for (int i = 0; i < node->adList.size(); ++i) {
 			VertexNode<T>* toNode = node->adList[i]->getDest();
 			if (!this->isVisited(toNode, visited)) q.push_back(toNode);
 		}
 	}
+    s << " ]";
 
 	return s.str();
 }
@@ -262,6 +276,7 @@ string DGraphModel<T>::DFS(T start) {
 	vector<VertexNode<T>*> st;
 	vector<VertexNode<T>*> visited;
 	stringstream s;
+    s << "[ ";
 	st.push_back(startNode);
 
 	while (!st.empty()) {
@@ -269,13 +284,14 @@ string DGraphModel<T>::DFS(T start) {
 		if (this->isVisited(node, visited)) continue;
 
 		visited.push_back(node);
-		s << node->toString() << " ";
+		s << node->toString() << ", ";
 		
 		for (int i = node->adList.size() - 1; i >= 0; --i) {
 			VertexNode<T>* toNode = node->adList[i]->getDest();
 			if (!this->isVisited(toNode, visited)) st.push_back(toNode);
 		}
 	}
+    s << " ]";
 
 	return s.str();
 }
