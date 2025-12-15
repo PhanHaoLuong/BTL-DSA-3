@@ -22,10 +22,6 @@ private:
 
 public:
     Edge(VertexNode<T>* from = nullptr, VertexNode<T>* to = nullptr, float weight = 0);
-	~Edge() {
-		delete from;
-		delete to;
-	}
     bool equals(Edge<T>* edge);
     static bool edgeEQ(Edge<T>*& edge1, Edge<T>*& edge2);
     string toString();
@@ -65,10 +61,6 @@ private:
 
 public:
     VertexNode(T vertex, bool (*vertexEQ)(T&, T&) = nullptr, string (*vertex2str)(T&) = nullptr);
-	~VertexNode() {
-		for (Edge<T>* e : adList) delete e;
-        adList.clear();
-	}
     T& getVertex();
     void connect(VertexNode<T>* to, float weight = 0);
     Edge<T>* getEdge(VertexNode<T>* to);

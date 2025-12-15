@@ -53,6 +53,7 @@ template <class T>
 void VertexNode<T>::connect(VertexNode<T>* to, float weight) {
     Edge<T>* newEdge = new Edge<T>(this, to, weight);
     this->adList.push_back(newEdge);
+    to->adList.push_back(newEdge);
     this->outDegree_++;
     to->inDegree_++;
 }
@@ -180,7 +181,13 @@ void DGraphModel<T>::connect(T from, T to, float weight) {
 	VertexNode<T>* vTo = this->getVertexNode(to);
 	if (!vFrom || !vTo) throw VertexNotFoundException();
 
-	vFrom->connect(vTo, weight);
+    Edge<T>* e = new Edge<T>(vFrom, vTo, weight);
+
+    vFrom->adList.push_back(e);
+    vTo->adList.push_back(e);
+
+    vFrom->outDegree_++;
+    vTo->inDegree_++;
 }
 
 template <class T>
@@ -216,9 +223,6 @@ bool DGraphModel<T>::empty() {
 template <class T>
 void DGraphModel<T>::clear() {
     for (VertexNode<T>* node : nodeList) {
-        for (Edge<T>* e : node->adList) {
-            delete e;
-        }
         node->adList.clear();
     }
 
@@ -366,14 +370,20 @@ string KnowledgeGraph::dfs(string start) {
 }
 
 bool KnowledgeGraph::isReachable(string from, string to) {
-
+    return false;
 }
 
-string KnowledgeGraph::toString() {}
+string KnowledgeGraph::toString() {
+    return "";
+}
 
-vector<string> getRelatedEntities(string entity, int depth = 2) {}
+vector<string> getRelatedEntities(string entity, int depth = 2) {
+    return {};
+}
 
-string findCommonAncestors(string entity1, string entity2) {}
+string findCommonAncestors(string entity1, string entity2) {
+    return "";
+}
 
 // =============================================================================
 // Explicit Template Instantiation
