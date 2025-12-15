@@ -1,5 +1,4 @@
 #include "KnowledgeGraph.h"
-#include <cstddef>
 
 // =============================================================================
 // Class Edge Implementation
@@ -14,8 +13,9 @@ Edge<T>::Edge(VertexNode<T>* from, VertexNode<T>* to, float weight) {
 
 template <class T>
 string Edge<T>::toString() {
-    // TODO: Return the string representation of the edge
-    return "";
+    stringstream s;
+    s << "(" << this->from->getVertex() << ", " << this->to->getVertex() << ", " << this->weight << ")";
+    return s.str();
 }
 
 // TODO: Implement other methods of Edge:
@@ -86,6 +86,19 @@ int VertexNode<T>::inDegree() {
 template <class T>
 int VertexNode<T>::outDegree() {
     return this->outDegree_;
+}
+
+template <class T>
+string VertexNode<T>::toString() {
+    stringstream s;
+    s << "(" << this->vertex << ", " << this->inDegree_ << ", " << this->outDegree_ << ", " << "[";
+
+    for (Edge<T>* edge : adList) {
+        s << edge->toString() << ", ";
+    }
+    
+    s << "])";
+    return s.str();
 }
 
 // =============================================================================
