@@ -22,11 +22,21 @@ private:
 
 public:
     Edge(VertexNode<T>* from = nullptr, VertexNode<T>* to = nullptr, float weight = 0);
-    
+	~Edge() {
+		delete from;
+		delete to;
+	}
     bool equals(Edge<T>* edge);
     static bool edgeEQ(Edge<T>*& edge1, Edge<T>*& edge2);
     string toString();
 
+	float getWeight() {
+		return this->weight;
+	}
+
+	VertexNode<T>* getStart() {
+		return this->from;
+	}
     VertexNode<T>* getDest() {
         return this->to;
     }
@@ -55,7 +65,9 @@ private:
 
 public:
     VertexNode(T vertex, bool (*vertexEQ)(T&, T&) = nullptr, string (*vertex2str)(T&) = nullptr);
-    
+	~VertexNode() {
+		for (Edge<T> e : adList) delete e;
+	}
     T& getVertex();
     void connect(VertexNode<T>* to, float weight = 0);
     Edge<T>* getEdge(VertexNode<T>* to);
@@ -110,6 +122,12 @@ public:
     vector<T> vertices();
     
     string toString();
+	bool isVisited(VertexNode<T>* node, vector<VertexNode<T>*>& visited) {
+		for (VertexNode<T>* v : visited) {
+			if (v == node) return true;
+		}
+		return false;
+	}
     string BFS(T start);
     string DFS(T start);
 };
@@ -127,7 +145,13 @@ private:
 
 public:
     KnowledgeGraph();
-    
+
+	bool hasEntity(string entity) {
+		for (string e : this->entities) {
+			if (e == entity) return true;
+		}
+		return false;
+	}
     void addEntity(string entity);
     void addRelation(string from, string to, float weight = 1.0f);
     
