@@ -402,13 +402,69 @@ string KnowledgeGraph::toString() {
     return this->graph.toString();
 }
 
-vector<string> getRelatedEntities(string entity, int depth = 2) {
-    return {};
+vector<string> KnowledgeGraph::getRelatedEntities(string entity, int depth) {
+    if (!hasEntity(entity)) throw EntityNotFoundException();
+    if (depth < 1) return {};
+
+    VertexNode<string>* start = graph.getVertexNode(entity);
+
+    vector<string> result;
+    vector<VertexNode<string>*> visited;
+    queue<pair<VertexNode<string>*, int>> q;
+
+    q.push({start, 0});
+
+    while (!q.empty()) {
+        auto [current, d] = q.front();
+        q.pop();
+
+        if (graph.isVisited(current, visited)) continue;
+        visited.push_back(current);
+
+        if (d > 0) {
+            result.push_back(current->getVertex());
+        }
+
+        if (d == depth) continue;
+
+		vector<Edge<string>*> neighbors = current->getAdList();
+        for (Edge<string>* e : neighbors) {
+            if (e->getStart() == current) {
+                VertexNode<string>* next = e->getDest();
+                if (!graph.isVisited(next, visited)) {
+                    q.push({next, d + 1});
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
-string findCommonAncestors(string entity1, string entity2) {
-    return "";
+string KnowledgeGraph::findCommonAncestors(string entity1, string entity2) {
+    if (!hasEntity(entity1) || !hasEntity(entity2))
+        throw EntityNotFoundException();
+
+    vector<string> ancestors;
+
+    for (string v : entities) {
+        if (isReachable(v, entity1) && isReachable(v, entity2)) {
+            ancestors.push_back(v);
+        }
+    }
+
+    stringstream ss;
+    ss << "[";
+
+    for (int i = 0; i < ancestors.size(); ++i) {
+        ss << ancestors[i];
+        if (i + 1 < ancestors.size()) ss << ", ";
+    }
+
+    ss << "]";
+    return ss.str();
 }
+
 
 // =============================================================================
 // Explicit Template Instantiation
