@@ -14,7 +14,7 @@ Edge<T>::Edge(VertexNode<T>* from, VertexNode<T>* to, float weight) {
 template <class T>
 string Edge<T>::toString() {
     stringstream s;
-    s << "(" << this->from->getVertex() << ", " << this->to->getVertex() << ", " << this->weight << ")";
+    s << "(" << this->from->getVertex() << ", " << this->to->getVertex() << ", " << to_string(this->weight) << ")";
     return s.str();
 }
 
@@ -370,11 +370,36 @@ string KnowledgeGraph::dfs(string start) {
 }
 
 bool KnowledgeGraph::isReachable(string from, string to) {
-    return false;
+	VertexNode<string>* vFrom = this->graph.getVertexNode(from);
+	VertexNode<string>* vTo = this->graph.getVertexNode(to);
+
+	if (!vFrom || !vTo) throw EntityNotFoundException();
+
+	vector<VertexNode<string>*> q;	
+	q.push_back(vFrom);
+	vector<VertexNode<string>*> visited;
+
+	while (!q.empty()) {
+		VertexNode<string>* current = q.front(); q.erase(q.begin());
+		if (this->graph.isVisited(current, visited)) continue;
+		visited.push_back(current);
+
+		if (current == vTo) return true;
+
+		vector<Edge<string>*> neighbors = current->getAdList();
+		for (Edge<string>* edge : neighbors) {
+			if (edge->getStart() == current) {
+				VertexNode<string>* next = edge->getDest();
+				if (!this->graph.isVisited(next, visited)) q.push_back(next);
+			}
+		}
+	}
+
+	return false;
 }
 
 string KnowledgeGraph::toString() {
-    return "";
+    return this->graph.toString();
 }
 
 vector<string> getRelatedEntities(string entity, int depth = 2) {

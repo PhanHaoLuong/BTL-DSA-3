@@ -75,6 +75,9 @@ public:
         
         return outV;
     }
+	vector<Edge<T>*> getAdList() {
+		return this->adList;
+	}
     bool equals(VertexNode<T>* node);
     void removeTo(VertexNode<T>* to);
     int inDegree();
